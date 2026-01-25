@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Comfort Hotel - Rooms</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">Comfort Hotel</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/rooms">Rooms</a></li>
+        <li class="nav-item"><a class="nav-link" href="/booking">Booking</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+      </ul>
+      <select id="currencySelector" class="form-select form-select-sm ms-3" style="width: auto;">
+        <option value="USD">USD ($)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="KZT">KZT (₸)</option>
+        <option value="RUB">RUB (₽)</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <h2 class="mb-4">Our Rooms</h2>
+  
+  <div class="mb-4">
+    <button class="btn btn-outline-danger filter-btn active" data-filter="all">All Rooms</button>
+    <button class="btn btn-outline-danger filter-btn" data-filter="single">Single</button>
+    <button class="btn btn-outline-danger filter-btn" data-filter="double">Double</button>
+    <button class="btn btn-outline-danger filter-btn" data-filter="suite">Suite</button>
+  </div>
+
+  <div class="row g-4" id="roomsContainer">
+    <div class="col-md-4 room-item" data-category="single">
+      <div class="card room-card h-100">
+        <img src="1.jpg" class="card-img-top gallery-img" alt="Single Room" data-room="single">
+        <div class="card-body">
+          <h5 class="card-title">Single Room</h5>
+          <p class="card-text">Perfect for solo travelers.</p>
+          <p class="card-text"><strong>Price: <span class="room-price" data-base="50">$50</span>/night</strong></p>
+          <a href="/booking?roomType=single&roomName=Single Room" class="btn btn-danger">Book Now</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 room-item" data-category="double">
+      <div class="card room-card h-100">
+        <img src="2.jpg" class="card-img-top gallery-img" alt="Double Room" data-room="double">
+        <div class="card-body">
+          <h5 class="card-title">Double Room</h5>
+          <p class="card-text">Comfortable stay for two guests.</p>
+          <p class="card-text"><strong>Price: <span class="room-price" data-base="90">$90</span>/night</strong></p>
+          <a href="/booking?roomType=double&roomName=Double Room" class="btn btn-danger">Book Now</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 room-item" data-category="suite">
+      <div class="card room-card h-100">
+        <img src="3.jpg" class="card-img-top gallery-img" alt="Luxury Suite" data-room="suite">
+        <div class="card-body">
+          <h5 class="card-title">Luxury Suite</h5>
+          <p class="card-text">Spacious suite with luxury services and city view.</p>
+          <p class="card-text"><strong>Price: <span class="room-price" data-base="150">$150</span>/night</strong></p>
+          <a href="/booking?roomType=suite&roomName=Luxury Suite" class="btn btn-danger">Book Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="mt-5">Room Pricing Table</h2>
+  <table class="table table-striped mt-3">
+    <thead class="table-dark">
+      <tr>
+        <th>Room Type</th>
+        <th>Price/Night</th>
+        <th>Max Guests</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Single Room</td>
+        <td><span class="table-price" data-base="50">$50</span></td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>Double Room</td>
+        <td><span class="table-price" data-base="90">$90</span></td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>Luxury Suite</td>
+        <td><span class="table-price" data-base="150">$150</span></td>
+        <td>4</td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+<div class="modal fade" id="imageModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Room Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="modalImage" src="" class="img-fluid" alt="Room">
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="bg-dark text-white text-center py-3 mt-5">
+  <p>©2025 Comfort Hotel | Contact: maga25@gmail.com</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let exchangeRates = {};
+
+$(document).ready(function() {
+  loadCurrency();
+  fetchExchangeRates();
+
+  $('.room-item').hide().each(function(index) {
+    $(this).delay(200 * index).fadeIn(600);
+  });
+
+  $('.filter-btn').click(function() {
+    $('.filter-btn').removeClass('active');
+    $(this).addClass('active');
+    
+    const filter = $(this).attr('data-filter');
+    
+    if (filter === 'all') {
+      $('.room-item').fadeIn(500);
+    } else {
+      $('.room-item').each(function() {
+        if ($(this).attr('data-category') === filter) {
+          $(this).fadeIn(500);
+        } else {
+          $(this).fadeOut(500);
+        }
+      });
+    }
+  });
+
+  $('.gallery-img').click(function() {
+    const src = $(this).attr('src');
+    const alt = $(this).attr('alt');
+    
+    $('#modalImage').attr('src', src);
+    $('#modalTitle').text(alt);
+    
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    modal.show();
+  });
+
+  $('.gallery-img').hover(
+    function() {
+      $(this).css({
+        'cursor': 'pointer',
+        'opacity': '0.8'
+      });
+    },
+    function() {
+      $(this).css('opacity', '1');
+    }
+  );
+
+  $('table tbody tr').hover(
+    function() {
+      $(this).css('background-color', 'lightblue');
+    },
+    function() {
+      $(this).css('background-color', '');
+    }
+  );
+
+  $('#currencySelector').change(function() {
+    const currency = $(this).val();
+    saveCurrency(currency);
+    updateAllPrices();
+  });
+});
+
+function fetchExchangeRates() {
+  const savedRates = localStorage.getItem('exchangeRates');
+  
+  if (savedRates) {
+    exchangeRates = JSON.parse(savedRates);
+    updateAllPrices();
+  }
+  
+  const url = 'https://api.exchangerate-api.com/v4/latest/USD';
+  
+  $.ajax({
+    url: url,
+    method: 'GET',
+    success: function(data) {
+      exchangeRates = data.rates;
+      localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
+      updateAllPrices();
+    },
+    error: function() {
+      console.log('Failed to fetch exchange rates');
+    }
+  });
+}
+
+function saveCurrency(currency) {
+  localStorage.setItem('selectedCurrency', currency);
+}
+
+function loadCurrency() {
+  const saved = localStorage.getItem('selectedCurrency');
+  if (saved) {
+    $('#currencySelector').val(saved);
+  }
+}
+
+function getCurrencySymbol(currency) {
+  const symbols = {
+    'USD': '$',
+    'EUR': '€',
+    'KZT': '₸',
+    'RUB': '₽'
+  };
+  return symbols[currency] || currency;
+}
+
+function updateAllPrices() {
+  const currency = $('#currencySelector').val();
+  const rate = exchangeRates[currency] || 1;
+  const symbol = getCurrencySymbol(currency);
+  
+  $('.room-price').each(function() {
+    const basePrice = parseFloat($(this).attr('data-base'));
+    const convertedPrice = Math.round(basePrice * rate);
+    $(this).text(symbol + convertedPrice);
+  });
+  
+  $('.table-price').each(function() {
+    const basePrice = parseFloat($(this).attr('data-base'));
+    const convertedPrice = Math.round(basePrice * rate);
+    $(this).text(symbol + convertedPrice);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Comfort Hotel - Contact</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">Comfort Hotel</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/rooms">Rooms</a></li>
+        <li class="nav-item"><a class="nav-link" href="/booking">Booking</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/contact">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+      </ul>
+      <select id="currencySelector" class="form-select form-select-sm ms-3" style="width: auto;">
+        <option value="USD">USD ($)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="KZT">KZT (₸)</option>
+        <option value="RUB">RUB (₽)</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-5">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="mb-4">Contact Us</h2>
+      
+      <!-- Create Contact Form -->
+      <div class="card">
+        <div class="card-body">
+          <form id="contactForm" method="POST" action="/contact" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+              <div class="invalid-feedback">Please enter your name.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+              <div class="invalid-feedback">Please enter a valid email address.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="message" class="form-label">Message</label>
+              <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+              <div class="invalid-feedback">Please enter your message.</div>
+            </div>
+
+            <button type="submit" class="btn btn-danger btn-lg">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <h3 class="mb-4">Our Information</h3>
+      <div class="contact-info">
+        <div class="info-item mb-3 p-3 border rounded">
+          <h5>Email</h5>
+          <p>maga25@gmail.com</p>
+        </div>
+        <div class="info-item mb-3 p-3 border rounded">
+          <h5>Phone</h5>
+          <p>+7 777 777 77 77</p>
+        </div>
+        <div class="info-item mb-3 p-3 border rounded">
+          <h5>Address</h5>
+          <p>Astana, Kazakhstan</p>
+        </div>
+        <div class="info-item mb-3 p-3 border rounded">
+          <h5>Working Hours</h5>
+          <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+          <p>Saturday - Sunday: 10:00 AM - 4:00 PM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="bg-dark text-white text-center py-3 mt-5">
+  <p>©2025 Comfort Hotel | Contact: maga25@gmail.com</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let exchangeRates = {};
+
+$(document).ready(function() {
+  loadCurrency();
+
+  $('.info-item').hide().each(function(index) {
+    $(this).delay(200 * index).fadeIn(600);
+  });
+
+  $('.info-item').hover(
+    function() {
+      $(this).css('background-color', 'lightgray');
+    },
+    function() {
+      $(this).css('background-color', 'white');
+    }
+  );
+
+  $('#contactForm').submit(function(e) {
+    const form = this;
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+      form.classList.add('was-validated');
+      return false;
+    }
+  });
+
+  $('#currencySelector').change(function() {
+    const currency = $(this).val();
+    saveCurrency(currency);
+  });
+});
+
+function saveCurrency(currency) {
+  localStorage.setItem('selectedCurrency', currency);
+}
+
+function loadCurrency() {
+  const saved = localStorage.getItem('selectedCurrency');
+  if (saved) {
+    $('#currencySelector').val(saved);
+  }
+}
+</script>
+</body>
+</html>

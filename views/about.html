@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Comfort Hotel - About Us</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">Comfort Hotel</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/rooms">Rooms</a></li>
+        <li class="nav-item"><a class="nav-link" href="/booking">Booking</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+      </ul>
+      <select id="currencySelector" class="form-select form-select-sm ms-3" style="width: auto;">
+        <option value="USD">USD ($)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="KZT">KZT (₸)</option>
+        <option value="RUB">RUB (₽)</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-5">
+  <h2 class="mb-4">About Comfort Hotel</h2>
+  <div class="row">
+    <div class="col-md-12">
+      <p class="lead">Comfort Hotel has been welcoming guests since 2010. Our mission is to provide comfort, quality service, and memorable experiences.</p>
+      
+      <h3 class="mt-5 mb-3">Our Amenities</h3>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="amenity-box p-3 border rounded">
+            <h5>Free Wi-Fi</h5>
+            <p>High-speed internet access throughout the hotel</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="amenity-box p-3 border rounded">
+            <h5>Breakfast Included</h5>
+            <p>Complimentary breakfast buffet every morning</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="amenity-box p-3 border rounded">
+            <h5>Swimming Pool</h5>
+            <p>Indoor heated pool available year-round</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="amenity-box p-3 border rounded">
+            <h5>Gym & Spa</h5>
+            <p>Modern fitness center and relaxing spa services</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="mt-5 mb-3">Frequently Asked Questions</h3>
+      <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+              What are the check-in and check-out times?
+            </button>
+          </h2>
+          <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Check-in time is 2:00 PM and check-out time is 11:00 AM. Early check-in and late check-out may be available upon request.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+              Do you offer airport transportation?
+            </button>
+          </h2>
+          <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes, we provide airport shuttle service for an additional fee. Please contact us in advance to arrange pickup.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+              Is parking available?
+            </button>
+          </h2>
+          <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes, we offer free parking for all guests. Valet parking is also available at an additional cost.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+              Are pets allowed?
+            </button>
+          </h2>
+          <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes, we are a pet-friendly hotel. A small additional fee applies for pets. Please inform us in advance.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+              What is your cancellation policy?
+            </button>
+          </h2>
+          <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Free cancellation up to 24 hours before check-in. Cancellations within 24 hours will incur a one-night charge.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="bg-dark text-white text-center py-3 mt-5">
+  <p>©2025 Comfort Hotel | Contact: maga25@gmail.com</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let exchangeRates = {};
+
+$(document).ready(function() {
+  loadCurrency();
+
+  $('.amenity-box').hide().each(function(index) {
+    $(this).delay(300 * index).fadeIn(800);
+  });
+
+  $('.amenity-box').hover(
+    function() {
+      $(this).css({
+        'background-color': 'lightcoral',
+        'color': 'white'
+      });
+    },
+    function() {
+      $(this).css({
+        'background-color': 'white',
+        'color': 'black'
+      });
+    }
+  );
+
+  $('#currencySelector').change(function() {
+    const currency = $(this).val();
+    saveCurrency(currency);
+  });
+});
+
+function saveCurrency(currency) {
+  localStorage.setItem('selectedCurrency', currency);
+}
+
+function loadCurrency() {
+  const saved = localStorage.getItem('selectedCurrency');
+  if (saved) {
+    $('#currencySelector').val(saved);
+  }
+}
+</script>
+</body>
+</html>
