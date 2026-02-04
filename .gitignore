@@ -1,1 +1,20 @@
-*.env
+.env
+.env.local
+.env*.local
+node_modules/
+.DS_Store
+Thumbs.db
+.vscode
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+
+# Build
+dist/
+build/
