@@ -199,7 +199,16 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin-login.html'));
 });
 
-// Login endpoint с bcrypt проверкой
+// User login page  
+app.get('/user', (req, res) => {
+  // Если уже залогинен, перенаправляем на dashboard
+  if (req.session && req.session.user) {
+    return res.redirect('/admin/dashboard');
+  }
+  res.sendFile(path.join(__dirname, 'views', 'user-login.html'));
+});
+
+// Admin Login endpoint - ТОЛЬКО ДЛЯ АДМИНОВ
 app.post('/admin/login', async (req, res) => {
   const { username, password } = req.body;
   
@@ -217,6 +226,14 @@ app.post('/admin/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
+    // ПРОВЕРКА: пользователь ДОЛЖЕН быть админом
+    if (user.role !== 'admin') {
+      return res.status(403).json({ 
+        error: 'Access denied. Admin privileges required.',
+        hint: 'Please use the User Login page'
+      });
+    }
+    
     // Проверяем пароль с помощью bcrypt
     const passwordMatch = await bcrypt.compare(password, user.password);
     
@@ -224,7 +241,7 @@ app.post('/admin/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    // Создаем сессию пользователя (НЕ сохраняем пароль в сессии!)
+    // Создаем сессию администратора
     req.session.user = {
       id: user._id.toString(),
       username: user.username,
@@ -242,7 +259,7 @@ app.post('/admin/login', async (req, res) => {
       
       res.status(200).json({ 
         success: true, 
-        message: 'Login successful',
+        message: 'Admin login successful',
         user: {
           username: user.username,
           role: user.role,
@@ -252,7 +269,73 @@ app.post('/admin/login', async (req, res) => {
     });
     
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Admin login error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// User Login endpoint - ДЛЯ НЕ-АДМИНОВ (manager, staff и т.д.)
+app.post('/user/login', async (req, res) => {
+  const { username, password } = req.body;
+  
+  // Валидация данных
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+  
+  try {
+    const db = await connectDB();
+    const user = await db.collection('users').findOne({ username });
+    
+    // Используем общее сообщение об ошибке для безопасности
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    
+    // ПРОВЕРКА: пользователь НЕ должен быть админом
+    if (user.role === 'admin') {
+      return res.status(403).json({ 
+        error: 'Access denied. Please use Admin Login.',
+        hint: 'Administrators must login through /admin'
+      });
+    }
+    
+    // Проверяем пароль с помощью bcrypt
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    
+    // Создаем сессию пользователя
+    req.session.user = {
+      id: user._id.toString(),
+      username: user.username,
+      role: user.role,
+      email: user.email,
+      fullName: user.fullName
+    };
+    
+    // Сохраняем сессию и отправляем ответ
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.status(500).json({ error: 'Session error' });
+      }
+      
+      res.status(200).json({ 
+        success: true, 
+        message: 'User login successful',
+        user: {
+          username: user.username,
+          role: user.role,
+          fullName: user.fullName
+        }
+      });
+    });
+    
+  } catch (error) {
+    console.error('User login error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -630,8 +713,8 @@ app.post('/api/bookings', isAuthenticated, async (req, res) => {
   }
 });
 
-/* UPDATE BOOKING - PROTECTED */
-app.put('/api/bookings/:id', isAuthenticated, async (req, res) => {
+/* UPDATE BOOKING - ADMIN ONLY */
+app.put('/api/bookings/:id', isAdmin, async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ error: 'Invalid ID format' });
   }
@@ -723,8 +806,8 @@ app.put('/api/bookings/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-/* DELETE BOOKING - PROTECTED */
-app.delete('/api/bookings/:id', isAuthenticated, async (req, res) => {
+/* DELETE BOOKING - ADMIN ONLY */
+app.delete('/api/bookings/:id', isAdmin, async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ error: 'Invalid ID format' });
   }
