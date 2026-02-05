@@ -8,12 +8,18 @@ const { ObjectId } = require('mongodb');
 const connectDB = require('./database/mongo');
 
 const app = express();
+const isProduction = process.env.NODE_ENV === 'production';
 
 // MIDDLEWARE CONFIGURATION
 // Body parsers
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+if (isProduction) {
+  // Allow secure cookies when running behind a proxy (e.g., Render/Heroku/Nginx)
+  app.set('trust proxy', 1);
+}
 
 // Session configuration 
 app.use(session({
@@ -28,9 +34,9 @@ app.use(session({
   }),
   cookie: {
     httpOnly: true, //protects against XSS attacks
-    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+    secure: isProduction ? 'auto' : false, // auto-detect HTTPS in production
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: 'strict' // Protects against CSRF
+    sameSite: isProduction ? 'auto' : 'lax' // be less strict in dev
   },
   name: 'sessionId' // Not using the default name 'connect.sid'
 }));
@@ -82,13 +88,9 @@ function isAdmin(req, res, next) {
   res.status(403).send('Access denied: Admin privileges required');
 }
 
-// ====================================
-// UTILITY FUNCTIONS
-// ====================================
 
-/**
- * Валидация email
- */
+// UTILITY FUNCTIONS
+
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);

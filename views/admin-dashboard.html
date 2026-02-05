@@ -340,7 +340,7 @@
   // Check authentication on page load
   async function checkAuth() {
     try {
-      const response = await fetch('/api/auth/status');
+      const response = await fetch('/api/auth/status', { credentials: 'same-origin' });
       const data = await response.json();
       
       if (!data.authenticated) {
@@ -361,7 +361,7 @@
   // Logout function
   async function logout() {
     try {
-      await fetch('/admin/logout', { method: 'POST' });
+      await fetch('/admin/logout', { method: 'POST', credentials: 'same-origin' });
       window.location.href = '/admin';
     } catch (error) {
       console.error('Logout failed:', error);
@@ -372,7 +372,7 @@
   // Load all bookings
   async function loadBookings() {
     try {
-      const response = await fetch('/api/bookings');
+      const response = await fetch('/api/bookings', { credentials: 'same-origin' });
       allBookings = await response.json();
       
       updateStatistics();
@@ -563,6 +563,7 @@
       const response = await fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
         body: JSON.stringify(data)
       });
       
@@ -592,7 +593,8 @@
     
     try {
       const response = await fetch(`/api/bookings/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'same-origin'
       });
       
       if (response.ok) {
